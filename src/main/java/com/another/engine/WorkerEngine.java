@@ -3,33 +3,28 @@ package com.another.engine;
 import com.another.engine.model.EngineContext;
 import com.another.engine.worker.Worker;
 import com.another.exception.RetryException;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorkerEngine {
+@Component
+public class WorkerEngine implements ApplicationContextAware {
 
-    static ConcurrentHashMap<Class, Worker> cache = new ConcurrentHashMap<>();
 
-    public static <T> T runWorkers(EngineContext context, Class<? extends Worker>... workerClassList) {
+    public <T> T runWorkers(EngineContext context, Class<? extends Worker>... workerClassList) {
         Worker[] workerList = new Worker[workerClassList.length];
         for (int i = 0; i < workerList.length; i++) {
-            try {
-                Worker o = cache.get(workerClassList[i]);
-                if (o == null) {
-                    o = workerClassList[i].newInstance();
-                    cache.put(workerClassList[i], o);
-                }
-                workerList[i] = o;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            Worker o = applicationContext.getBean(workerClassList[i]);
+            workerList[i] = o;
+
         }
         return runWorkers(context, workerList);
     }
 
-    public static <T> T runWorkers(EngineContext context, Worker... workerList) {
+    public <T> T runWorkers(EngineContext context, Worker... workerList) {
 
         int i = 0;
         try {
@@ -52,5 +47,12 @@ public class WorkerEngine {
         }
 
         return (T) context.getReturnObj();
+    }
+
+    ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

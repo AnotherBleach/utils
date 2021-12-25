@@ -11,6 +11,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +19,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Aspect
 @Component
 public class RetryHandler {
-    ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
+
+    @Autowired
+    WorkerEngine workerEngine;
 
     @Pointcut("@annotation(com.another.annotation.RetrySuite)")
     public void retry() {
@@ -29,7 +32,7 @@ public class RetryHandler {
     public Object handle(ProceedingJoinPoint joinPoint) {
         EngineContext context = new EngineContext();
         context.put(SystemConstants.jointPoint, joinPoint);
-        return WorkerEngine.runWorkers(context,
+        return workerEngine.runWorkers(context,
                 MetaInfoExtractWorker.class,
                 DoInvokeWorker.class,
                 RetryCheckWorker.class,

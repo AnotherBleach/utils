@@ -1,16 +1,12 @@
 package com.another.engine.worker.retry;
 
+import com.another.annotation.MyWorker;
 import com.another.annotation.RetrySuite;
 import com.another.constant.SystemConstants;
 import com.another.engine.model.EngineContext;
 import com.another.engine.worker.Worker;
 import com.another.utils.ValidateUtils;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.aspectj.lang.ProceedingJoinPoint;
-
-import java.util.function.Predicate;
-
+@MyWorker
 public class RetryCheckWorker implements Worker {
     @Override
     public void run(EngineContext engineContext) {

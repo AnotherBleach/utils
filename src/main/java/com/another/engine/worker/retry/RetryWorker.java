@@ -1,5 +1,6 @@
 package com.another.engine.worker.retry;
 
+import com.another.annotation.MyWorker;
 import com.another.annotation.RetrySuite;
 import com.another.constant.SystemConstants;
 import com.another.engine.model.EngineContext;
@@ -8,6 +9,7 @@ import com.another.utils.ValidateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 
+@MyWorker
 @Slf4j
 public class RetryWorker implements Worker {
     @Override

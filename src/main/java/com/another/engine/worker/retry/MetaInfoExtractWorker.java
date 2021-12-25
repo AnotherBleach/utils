@@ -1,8 +1,10 @@
 package com.another.engine.worker.retry;
 
+import com.another.annotation.MyWorker;
 import com.another.annotation.RetrySuite;
 import com.another.constant.SystemConstants;
 import com.another.engine.model.EngineContext;
+
 import com.another.engine.worker.Worker;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -10,6 +12,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 /**
  * 读取当前方法的retry注解信息
  */
+
+@MyWorker
 public class MetaInfoExtractWorker implements Worker {
     @Override
     public void run(EngineContext engineContext) {
